@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './styles/globals.css'
-
+import Header from './components/Header'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Plateforme de Streaming',
+  title: 'StreamPlatform',
   description: 'Plateforme de streaming vidéo personnalisée',
 }
 
@@ -18,15 +18,10 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={inter.className}>
-        <header>
-          <nav>
-            <a href="/">Accueil</a>
-          </nav>
-        </header>
-        <main>{children}</main>
-        <footer>
-          <p>&copy; 2024 Plateforme de Streaming</p>
-        </footer>
+        <Header />
+        <main className="container mx-auto px-4 py-8">
+          {children}
+        </main>
       </body>
     </html>
   )
