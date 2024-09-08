@@ -6,6 +6,7 @@ export default function VideoPlayer({ src }: { src: string }) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [progress, setProgress] = useState(0)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const video = videoRef.current
@@ -16,8 +17,17 @@ export default function VideoPlayer({ src }: { src: string }) {
       setProgress(progress)
     }
 
+    const handleError = (e: ErrorEvent) => {
+      console.error('Video error:', e)
+      setError('Une erreur est survenue lors du chargement de la vidéo.')
+    }
+
     video.addEventListener('timeupdate', updateProgress)
-    return () => video.removeEventListener('timeupdate', updateProgress)
+    video.addEventListener('error', handleError)
+    return () => {
+      video.removeEventListener('timeupdate', updateProgress)
+      video.removeEventListener('error', handleError)
+    }
   }, [])
 
   const togglePlay = () => {
@@ -25,7 +35,10 @@ export default function VideoPlayer({ src }: { src: string }) {
       if (isPlaying) {
         videoRef.current.pause()
       } else {
-        videoRef.current.play()
+        videoRef.current.play().catch(e => {
+          console.error('Playback failed:', e)
+          setError('La lecture de la vidéo a échoué. Veuillez réessayer.')
+        })
       }
       setIsPlaying(!isPlaying)
     }
@@ -37,6 +50,10 @@ export default function VideoPlayer({ src }: { src: string }) {
       const time = (parseFloat(e.target.value) / 100) * video.duration
       video.currentTime = time
     }
+  }
+
+  if (error) {
+    return <div className="text-red-500">{error}</div>
   }
 
   return (
