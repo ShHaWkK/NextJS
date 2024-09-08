@@ -1,3 +1,4 @@
+// components/VideoList.tsx
 import Link from 'next/link'
 
 type Video = {

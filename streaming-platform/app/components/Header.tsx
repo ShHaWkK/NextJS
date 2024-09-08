@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import SearchBar from './SearchBar'
 
 export default function Header() {
   return (
@@ -7,6 +8,7 @@ export default function Header() {
         <Link href="/" className="text-2xl font-bold">
           StreamPlatform
         </Link>
+        <SearchBar />
         <nav>
           <ul className="flex space-x-4">
             <li><Link href="/" className="hover:underline">Accueil</Link></li>
