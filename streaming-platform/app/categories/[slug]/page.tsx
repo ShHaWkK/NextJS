@@ -1,7 +1,7 @@
 import VideoList from './../../components/VideoList'
 
 async function getVideosByCategory(slug: string) {
-  // Dans un vrai scénario, vous feriez un appel API ici
+  //Plus tard un appel API ici
   const allVideos = [
     { id: 1, title: "Introduction à Next.js", src: "/videos/nextjs-intro.mp4", category: "tech" },
     { id: 2, title: "React Hooks Expliqués", src: "/videos/react-hooks.mp4", category: "tech" },
