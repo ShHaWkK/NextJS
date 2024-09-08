@@ -14,9 +14,12 @@ StreamPlatform est une application web moderne de streaming vidéo construite av
 ## 🚀 Démarrage rapide
 
 1. Clonez le dépôt :
+```git
+git clone https://github.com/ShHaWkK/Streaming_Platform.git
+```
 
 2. Installez les dépendances :
-```
+```linux
 cd streamplatform
 npm install
 ```
