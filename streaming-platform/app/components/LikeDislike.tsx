@@ -1,54 +1,39 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function LikeDislike({ videoId }: { videoId: number }) {
   const [likes, setLikes] = useState(0)
   const [dislikes, setDislikes] = useState(0)
-  const [userAction, setUserAction] = useState<'like' | 'dislike' | null>(null)
 
-  const handleLike = () => {
-    if (userAction === 'like') {
-      setLikes(likes - 1)
-      setUserAction(null)
-    } else {
-      if (userAction === 'dislike') {
-        setDislikes(dislikes - 1)
-      }
-      setLikes(likes + 1)
-      setUserAction('like')
-    }
+  useEffect(() => {
+    fetchLikes()
+  }, [videoId])
+
+  const fetchLikes = async () => {
+    const res = await fetch(`/api/likes?videoId=${videoId}`)
+    const data = await res.json()
+    setLikes(data.likes)
+    setDislikes(data.dislikes)
   }
 
-  const handleDislike = () => {
-    if (userAction === 'dislike') {
-      setDislikes(dislikes - 1)
-      setUserAction(null)
-    } else {
-      if (userAction === 'like') {
-        setLikes(likes - 1)
-      }
-      setDislikes(dislikes + 1)
-      setUserAction('dislike')
-    }
+  const handleAction = async (action: 'like' | 'dislike') => {
+    const res = await fetch('/api/likes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ videoId, action })
+    })
+    const data = await res.json()
+    setLikes(data.likes)
+    setDislikes(data.dislikes)
   }
 
   return (
     <div className="flex items-center space-x-4">
-      <button
-        onClick={handleLike}
-        className={`px-4 py-2 rounded-md ${
-          userAction === 'like' ? 'bg-blue-500 text-white' : 'bg-gray-200'
-        }`}
-      >
+      <button onClick={() => handleAction('like')} className="px-4 py-2 bg-blue-500 text-white rounded-md">
         👍 {likes}
       </button>
-      <button
-        onClick={handleDislike}
-        className={`px-4 py-2 rounded-md ${
-          userAction === 'dislike' ? 'bg-red-500 text-white' : 'bg-gray-200'
-        }`}
-      >
+      <button onClick={() => handleAction('dislike')} className="px-4 py-2 bg-red-500 text-white rounded-md">
         👎 {dislikes}
       </button>
     </div>

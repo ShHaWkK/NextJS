@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 type Comment = {
   id: number
@@ -13,15 +13,25 @@ export default function CommentSection({ videoId }: { videoId: number }) {
   const [comments, setComments] = useState<Comment[]>([])
   const [newComment, setNewComment] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    fetchComments()
+  }, [videoId])
+
+  const fetchComments = async () => {
+    const res = await fetch(`/api/comments?videoId=${videoId}`)
+    const data = await res.json()
+    setComments(data)
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const comment: Comment = {
-      id: Date.now(),
-      user: 'Utilisateur Anonyme',
-      content: newComment,
-      createdAt: new Date().toISOString()
-    }
-    setComments([...comments, comment])
+    const res = await fetch('/api/comments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ videoId, user: 'Utilisateur Anonyme', content: newComment })
+    })
+    const newCommentData = await res.json()
+    setComments([...comments, newCommentData])
     setNewComment('')
   }
 
